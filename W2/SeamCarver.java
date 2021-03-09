@@ -57,6 +57,10 @@ public class SeamCarver {
    // energy of pixel at column x and row y
    public double energy(int c, int r) {
 	   
+	   if (c < 0 || r < 0 || c >= width() || r >= height() ) {
+		   throw new IllegalArgumentException("Inputs out of range");
+	   }
+	   
 	   if(r == 0 || r == (height() - 1) || c == 0 || c == (width()- 1)) {
 		   return 1000.00;
 	   }
@@ -212,6 +216,12 @@ public class SeamCarver {
 	   if (seam == null || seam.length != width())
 		   throw new IllegalArgumentException("Invalid Input");
 
+ 	   for(int v : seam) {
+ 		   if (v < 0) {
+ 			  throw new IllegalArgumentException("Invalid seam values!");
+ 		   }
+ 	   }
+ 	   
 	   for(int r = 1; r < seam.length; r++) {
 		   if(Math.abs(seam[r - 1 ] - seam[r]) > 1) {
 			   throw new IllegalArgumentException("Invalid seam values!");
@@ -253,6 +263,12 @@ public class SeamCarver {
 	   if (seam == null || seam.length != height())
 		   throw new IllegalArgumentException("Invalid Input");
 	   
+	   for(int v : seam) {
+		   if (v < 0) {
+			   throw new IllegalArgumentException("Invalid Input");
+		   }
+	   }
+	   
 	   for(int c = 1; c < seam.length; c++) {
 		   if(Math.abs(seam[c - 1 ] - seam[c]) > 1) {
 			   throw new IllegalArgumentException("Invalid seam values!");
@@ -271,13 +287,14 @@ public class SeamCarver {
 			   modPic.setRGB(cOut, rOut, myImage.getRGB(cIn, rIn));
 		   }
 		   cIn++; //skip seam
-		   for(;cIn < modPic.width();cIn++, cOut++) {
+		   for(;cIn < myImage.width();cIn++, cOut++) {
 			   modPic.setRGB(cOut, rOut, myImage.getRGB(cIn, rIn));
 		   }
 	   }
 	   
 	   myImage = modPic;
 	   
+   
 	   double [][] modImgEnrg = new double[H][W];
 	   for(int r = 0 ; r < H; r++) {
 		   for (int c = 0; c < W; c++) {
@@ -298,6 +315,15 @@ public class SeamCarver {
 //	   
 //	   return newPic;
 //   }
+//   public void printValues() {
+//	   // test code
+//	   for(int r = 0; r < myImage.height(); r++) {
+//		   for(int c = 0; c < myImage.width(); c++) {
+//			   StdOut.printf("0x%x, ", myImage.getRGB(c, r));
+//		   }
+//		   StdOut.print("\n");
+//	   }
+//   }
 
    //  unit testing (optional)
    public static void main(String[] args) {
@@ -305,12 +331,25 @@ public class SeamCarver {
 	   Picture testImg = new Picture(args[0]);
 	   SeamCarver sc1 = new SeamCarver(testImg);
 	   
-	   StdOut.print("find vertical seam\n");
-	   sc1.findVerticalSeam();
-	   
-	   StdOut.print("find horizontal seam\n");
-	   sc1.findHorizontalSeam();
-	   
+//	   StdOut.print("find vertical seam\n");
+//	   int vSeam[] = sc1.findVerticalSeam();
+//	   
+//	   
+//	   StdOut.print("Before vertical removing seam\n");
+//	   sc1.printValues();
+//	   sc1.removeVerticalSeam(vSeam);
+//	   StdOut.print("After vertical removing seam\n");
+//	   sc1.printValues();
+//	   
+//	   
+//	   StdOut.print("find horizontal seam\n");
+//	   int hSeam[] = sc1.findHorizontalSeam();
+//	   StdOut.print("Before removing horizontal seam\n");
+//	   sc1.printValues();
+//	   sc1.removeHorizontalSeam(hSeam);
+//	   StdOut.print("After horizontal removing seam\n");
+//	   sc1.printValues();
+
 //	   Picture pe = sc1.pictureEnergies();
 //	   pe.save(args[1]);
 	   
