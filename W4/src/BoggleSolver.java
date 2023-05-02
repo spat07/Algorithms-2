@@ -110,7 +110,51 @@ public class BoggleSolver {
     // otherwise.
     // (You can assume the word contains only the uppercase letters A through Z.)
     public int scoreOf(String word) {
-        return 0;
+        int score = 0, wl = word.length();
+
+        if(wl <= 2 || (!dictTrieST.contains(word))) {
+            return 0; //score 0
+        }
+
+        //take care of Qu condition
+        if(word.charAt(0) == 'Q') {
+            wl++;
+        }
+
+        switch(wl) {
+            case 3:
+            case 4:
+            {
+                score = 1;
+                break;
+            }
+            case 5:
+            {
+                score = 2;
+                break;
+            }
+            case 6:
+            {
+                score = 3;
+                break;
+            }
+            case 7:
+            {
+                score = 5;
+                break;
+            }
+            default:
+            {
+                if(wl > 7) {
+                    score = 11;
+                }
+                else {
+                    StdOut.printf("invalid length : %d!", wl);
+                    score = 0;
+                }
+            }
+        }
+        return score;
     }
 
     // test main
