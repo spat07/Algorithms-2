@@ -1,12 +1,11 @@
 // import edu.princeton.cs.algs4.BinaryStdIn;
 // import edu.princeton.cs.algs4.BinaryStdOut;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 import edu.princeton.cs.algs4.BinaryStdIn;
-import edu.princeton.cs.algs4.StdIn;
+import edu.princeton.cs.algs4.BinaryStdOut;
 import edu.princeton.cs.algs4.StdOut;
 
 public class BurrowsWheeler {
@@ -14,33 +13,55 @@ public class BurrowsWheeler {
     // apply Burrows-Wheeler transform,
     // reading from standard input and writing to standard output 
     public static void transform() {
-        // String s = BinaryStdIn.readString();
-        String s = StdIn.readString();
 
-        StdOut.printf("Input string : %s\n", s);
+        StringBuilder in = new StringBuilder();
+        // read last character sequece or sorted suffix array
+        while (!BinaryStdIn.isEmpty()) {
+            // char c = StdIn.readChar();
+            char c = BinaryStdIn.readChar();
+            // System.out.printf("c=%d, %c\n", (int)c, c);
+            if ((int) c > 30) {
+                in.append(c);
+            }
+        }
 
-        CircularSuffixArray csa = new CircularSuffixArray(s);
-        int n = s.length();
-        String[] suffixes = csa.sortedSuffixes();
+        String input = in.toString();
+        // StdOut.printf("Input string : %s\n", input);
+
+
+        CircularSuffixArray csa = new CircularSuffixArray(input);
+        int n = input.length();
+        // String[] suffixes = csa.sortedSuffixes();
 
         //create t[] array
         StringBuilder sb = new StringBuilder();
         int matchIdx = -1;
-        for(int i = 0; i < n; i++) {
-            sb.append(suffixes[i].charAt(n-1));
-            if(csa.index(i) == 0) {
+        // for(int i = 0; i < n; i++) {
+        //     sb.append(suffixes[i].charAt(n-1));
+        //     if(csa.index(i) == 0) {
+        //         matchIdx = i;
+        //     }
+        // }
+
+        // look up index() to get position of sorted suffix
+        // read the char with that position
+        for(int i = 0, idx = -1; i < n; i++) {
+            idx = csa.index(i);
+            if(idx == 0) {
                 matchIdx = i;
+                idx = n;
             }
+            sb.append(input.charAt(idx - 1));
         }
         if (matchIdx != -1) {
-            // BinaryStdOut.write(matchIdx);
-            StdOut.printf("idx:%d\n", matchIdx);
+            // System.out.printf("matchIdx:%d\n", matchIdx);
+            BinaryStdOut.write(matchIdx);
         } else {
             StdOut.println("Error! invalid matchIdx\n");
         }
-
-        // BinaryStdOut.write(sb.toString());
-        StdOut.printf("t[] : %s\n", sb.toString());
+        // System.out.printf("encoded:%s\n", sb.toString());s
+        BinaryStdOut.write(sb.toString());
+        BinaryStdOut.flush();
     }
 
     private static int binarySearch(Character[] a, int start, int end, char key) {
@@ -60,15 +81,13 @@ public class BurrowsWheeler {
         // check untill start if same key repeating
         // if so send the first occurance
 
-        while(mid >= start) {
+        while(--mid >= start) {
             if(a[mid] != key) {
-                mid++;
                 break;
             }
-            mid--;
         }
 
-        return mid;
+        return mid + 1;
     }
 
     // apply Burrows-Wheeler inverse transform,
@@ -77,23 +96,24 @@ public class BurrowsWheeler {
 
         // read original string position in sorted order
         // int k = BinaryStdIn.readInt();
-        int k = StdIn.readInt();
+        int first = BinaryStdIn.readInt();
+        // System.out.printf("first=%d\n", first);
 
         ArrayList<Character> in = new ArrayList<>();
         StringBuilder temp = new StringBuilder();
         // read last character sequece or sorted suffix array
-        while (!StdIn.isEmpty()) {
-            // while (!BinaryStdIn.isEmpty()) {
-            // in.add(BinaryStdIn.readChar());
-            char c = StdIn.readChar();
-            // System.out.printf("c=%d\n", (int)c);
-            if (((int) c >= 65 && (int) c <= 90) || ((int)c == 33)) {
+        // while (!StdIn.isEmpty()) {
+        while (!BinaryStdIn.isEmpty()) {
+            // char c = StdIn.readChar();
+            char c = BinaryStdIn.readChar();
+            // System.out.printf("c=%d, %c\n", (int)c, c);
+            if ((int) c > 30) {
                 in.add(c);
                 temp.append(c);
             }
         }
         int n = in.size();
-        StdOut.printf("input:%s\n",temp.toString());
+        // StdOut.printf("input:first =%d, %s, len %d\n",first, temp.toString(), temp.length());
 
         // generate sorted order sequence for fist char of suffix array
         Character[] t = new Character[n];
@@ -112,24 +132,29 @@ public class BurrowsWheeler {
 
         // next[0] = k;
         // serched[0] = true;
-    
+
         for(int i = 0; i < n; i++) {
             int idx = binarySearch(f, 0, n, t[i]);
             while(serched[idx]) {
-                idx = binarySearch(f, idx + 1, n, t[i]);
+                // idx = binarySearch(f, idx + 1, n, t[i]);
+                idx++;
             }
-            System.out.printf("Search:i %d, key %c, idx %d, searched %b\n", i, t[i], idx, serched[i]);
+            // System.out.printf("Search:i %d, key %c, idx %d, searched %b\n", i, t[i], idx, serched[i]);
             next[idx] = i;
             serched[idx] = true;
         }
 
+        // StdOut.printf("Next[]:%ss\n", Arrays.toString(next));
+
         
         StringBuilder sb = new StringBuilder();
-        for(int i = 0, j = 0; i < n; i++) {
-            sb.append(f[next[j]]);
+        for(int i = 0, j = first; i < n; i++) {
+            sb.append(f[j]);
             j = next[j];
         }
-        System.out.printf("decoded output: %s", sb.toString());
+        // System.out.printf("decoded output: %s\n", sb.toString());
+        BinaryStdOut.write(sb.toString());
+        BinaryStdOut.flush();
                
     }
 

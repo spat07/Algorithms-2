@@ -27,10 +27,10 @@ public class CircularSuffixArray {
         // Arrays.sort(suffixes);
         index = LSDSort.sort(suffixes, len);
         
-        StdOut.println("sorted suffixes:");
-        for(int i = 0; i < len; i++) {
-            StdOut.printf("%2d, %12s, %2d\n", i, suffixes[i], index[i]);
-        }
+        // StdOut.println("sorted suffixes:");
+        // for(int i = 0; i < len; i++) {
+        //     StdOut.printf("%2d, %12s, %2d\n", i, suffixes[i], index[i]);
+        // }
     }
 
     // length of s
@@ -45,9 +45,9 @@ public class CircularSuffixArray {
     }
 
     // return suffixes
-    public String[] sortedSuffixes() {
-        return suffixes;
-    }
+    // public String[] sortedSuffixes() {
+    //     return suffixes;
+    // }
 
     // unit testing (required)
     public static void main(String[] args) {
