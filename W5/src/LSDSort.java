@@ -18,12 +18,6 @@ public class LSDSort {
         int[] temp = new int[n];
         int[] temp2 = new int[n];
 
-        //for debug
-        // ipCopy = Arrays.copyOf(a, a.length);
-        // HashMap<String, Integer> strIdx = new HashMap<>(n);
-        // for(int i = 0; i < n; i++) {
-        //     strIdx.put(ipCopy[i], i);
-        // }
 
         for(int i = 0; i < n; i++) {
             index[i] = i;

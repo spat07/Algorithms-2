@@ -31,17 +31,10 @@ public class BurrowsWheeler {
 
         CircularSuffixArray csa = new CircularSuffixArray(input);
         int n = input.length();
-        // String[] suffixes = csa.sortedSuffixes();
 
         //create t[] array
         StringBuilder sb = new StringBuilder();
         int matchIdx = -1;
-        // for(int i = 0; i < n; i++) {
-        //     sb.append(suffixes[i].charAt(n-1));
-        //     if(csa.index(i) == 0) {
-        //         matchIdx = i;
-        //     }
-        // }
 
         // look up index() to get position of sorted suffix
         // read the char with that position
@@ -95,22 +88,19 @@ public class BurrowsWheeler {
     public static void inverseTransform() {
 
         // read original string position in sorted order
-        // int k = BinaryStdIn.readInt();
         int first = BinaryStdIn.readInt();
         // System.out.printf("first=%d\n", first);
 
         ArrayList<Character> in = new ArrayList<>();
-        StringBuilder temp = new StringBuilder();
         // read last character sequece or sorted suffix array
         // while (!StdIn.isEmpty()) {
         while (!BinaryStdIn.isEmpty()) {
             // char c = StdIn.readChar();
             char c = BinaryStdIn.readChar();
             // System.out.printf("c=%d, %c\n", (int)c, c);
-            if ((int) c > 30) {
+            // if ((int) c > 30) {
                 in.add(c);
-                temp.append(c);
-            }
+            // }
         }
         int n = in.size();
         // StdOut.printf("input:first =%d, %s, len %d\n",first, temp.toString(), temp.length());
