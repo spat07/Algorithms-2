@@ -17,10 +17,11 @@ public class BurrowsWheeler {
         // long start = 0, end = 0;
 
         StringBuilder in = new StringBuilder();
+
         // read last character sequece or sorted suffix array
         while (!BinaryStdIn.isEmpty()) {
-            char c = BinaryStdIn.readChar();
-            in.append(c);
+            String s = BinaryStdIn.readString();
+            in.append(s);
         }
 
         // start = System.currentTimeMillis();
@@ -56,35 +57,33 @@ public class BurrowsWheeler {
 
         BinaryStdOut.write(sb.toString());
         BinaryStdOut.flush();
-
-
     }
 
-    private static int binarySearch(Character[] a, int start, int end, char key) {
-        int hi = end, lo = start;
-        int mid = (start + end) / 2;
-        while (lo < hi) {
-            mid = (hi + lo) / 2;
-            if (a[mid] == key) {
-                break;
-            } else if (a[mid] > key) {
-                hi = mid;
-            } else if (a[mid] < key) {
-                lo = mid;
-            }
-        }
+    // private static int binarySearch(Character[] a, int start, int end, char key) {
+    //     int hi = end, lo = start;
+    //     int mid = (start + end) / 2;
+    //     while (lo < hi) {
+    //         mid = (hi + lo) / 2;
+    //         if (a[mid] == key) {
+    //             break;
+    //         } else if (a[mid] > key) {
+    //             hi = mid;
+    //         } else if (a[mid] < key) {
+    //             lo = mid;
+    //         }
+    //     }
 
-        // check untill start if same key repeating
-        // if so send the first occurance
+    //     // check untill start if same key repeating
+    //     // if so send the first occurance
 
-        while(--mid >= start) {
-            if(a[mid] != key) {
-                break;
-            }
-        }
+    //     while(--mid >= start) {
+    //         if(a[mid] != key) {
+    //             break;
+    //         }
+    //     }
 
-        return mid + 1;
-    }
+    //     return mid + 1;
+    // }
 
     // apply Burrows-Wheeler inverse transform,
     // reading from standard input and writing to standard output
@@ -109,25 +108,48 @@ public class BurrowsWheeler {
         // StdOut.printf("input:first =%d, %s, len %d\n",first, temp.toString(), temp.length());
 
         // generate sorted order sequence for fist char of suffix array
-        Character[] t = new Character[n];
-        t = in.toArray(t);
+        // Character[] t = new Character[n];
+        // t = in.toArray(t);
         
         Character[] f  = new Character[n];
         f = in.toArray(f);
         Arrays.sort(f);
 
         int next[] = new int[n];
-        boolean serched[] = new boolean[n];
 
+        // prepare cumulate
+        final int R = 256; // extend ASCII alphabet size
+        int[] accumulates = new int[R+1];
+
+        // compute frequency counts
+        for (int i = 0; i < n; i++)
+        accumulates[f[i] + 1]++;
+
+        // compute cumulates
+        for (int r = 0; r < R; r++)
+        accumulates[r + 1] += accumulates[r];        
+
+        // key index based also
         for(int i = 0; i < n; i++) {
-            int idx = binarySearch(f, 0, n, t[i]);
-            while(serched[idx]) {
-                idx++;
-            }
-            // System.out.printf("Search:i %d, key %c, idx %d, searched %b\n", i, t[i], idx, serched[i]);
-            next[idx] = i;
-            serched[idx] = true;
+            // index in.get(i) in cumulates, get index increment cumulate
+            int idx = accumulates[in.get(i)]++;
+        
+            // fill index in next[i]
+            next[idx] = i;  
         }
+
+
+        // boolean serched[] = new boolean[n];
+
+        // for(int i = 0; i < n; i++) {
+        //     int idx = binarySearch(f, 0, n, in.get(i)/*t[i]*/);
+        //     while(serched[idx]) {
+        //         idx++;
+        //     }
+        //     // System.out.printf("Search:i %d, key %c, idx %d, searched %b\n", i, t[i], idx, serched[i]);
+        //     next[idx] = i;
+        //     serched[idx] = true;
+        // }
         
         StringBuilder sb = new StringBuilder();
         for(int i = 0, j = first; i < n; i++) {
